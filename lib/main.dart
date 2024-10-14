@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_project_webspark/core/styles.dart';
+import 'package:test_project_webspark/presentation/bloc/bloc/find_route_bloc.dart';
+import 'package:test_project_webspark/presentation/routes/router_config.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,11 +13,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return BlocProvider(
+      create: (context) => FindRouteBloc(),
+      child: MaterialApp.router(
+        theme: AppThemes.lightTheme,
+        debugShowCheckedModeBanner: false,
+        routerConfig: MyAppRouter.returnRouter(false),
       ),
     );
   }
