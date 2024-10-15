@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:test_project_webspark/core/data_state.dart';
 import 'package:test_project_webspark/data/models/field_info_model.dart';
@@ -28,6 +29,7 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
     on<StartCountingProcessEvent>(onStartCountingProcessEvent);
     on<ViewDetailsOfRouteEvent>(onViewDetailsOfRouteEvent);
     on<SendResultEvent>(onSendResultEvent);
+    on<ViewResultsEvent>(onViewResultsEvent);
   }
 
   Future<void> onStartCountingProcessEvent(
@@ -51,21 +53,32 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
       SendResultEvent event, Emitter<FindRouteState> emit) async {
     emit(SendingResults());
     List results = [];
-    event.routes.forEach((route) async {
-      results.add(await _sendResultUseCase.call(params: route as RouteEntity));
-    });
-    results.forEach((res) {
-      if (res is DataFailed) {
-        emit(ErrorFindRouteState(res.error!));
-      }
-    });
-
-    emit(ResultIsSended(
-        routeModels: event.routes, fieldInfoModels: event.fieldInfoModels));
+    for (var route in event.routes) {
+      var temp = await _sendResultUseCase.call(params: route as RouteEntity);
+      results.add(temp);
+    }
+    if (results.any((result) => result is DataFailed))
+      emit(ErrorInSendingResultsState(
+          DioException(
+              requestOptions: RequestOptions(),
+              error: results.where((res) => res is DataFailed)),
+          event.fieldInfoModels,
+          event.routes));
+    else {
+      emit(ResultIsSended(
+          routeModels: event.routes, fieldInfoModels: event.fieldInfoModels));
+    }
   }
 
   void onViewDetailsOfRouteEvent(
       ViewDetailsOfRouteEvent event, Emitter<FindRouteState> emit) {
-    emit(DetailedResultState(event.fieldInfoModel, event.routeModel));
+    emit(DetailedResultState(
+        event.fieldInfoModels, event.routeModels, event.index));
+  }
+
+  void onViewResultsEvent(
+      ViewResultsEvent event, Emitter<FindRouteState> emit) {
+    emit(ResultIsSended(
+        routeModels: event.routes, fieldInfoModels: event.fieldInfoModels));
   }
 }

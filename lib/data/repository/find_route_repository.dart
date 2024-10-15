@@ -64,8 +64,8 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
 
         res = await _routeApiService.sendData(
             baseUrl: url!, data: route.toJson());
-
-        if (res.statusCode == 200 && res.data['data']['0']['correct'] == true)
+            print(res);
+        if (res.statusCode == 200)
           return DataSuccess<void>(data: res);
         else {
           return DataFailed(

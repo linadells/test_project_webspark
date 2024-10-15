@@ -14,8 +14,15 @@ final class SendResultEvent extends FindRouteEvent {
   SendResultEvent(this.routes, this.fieldInfoModels);
 }
 
+final class ViewResultsEvent extends FindRouteEvent {
+  List<RouteModel> routes;
+  List<FieldInfoModel> fieldInfoModels;
+  ViewResultsEvent(this.routes, this.fieldInfoModels);
+}
+
 final class ViewDetailsOfRouteEvent extends FindRouteEvent {
-  RouteModel routeModel;
-  FieldInfoModel fieldInfoModel;
-  ViewDetailsOfRouteEvent(this.routeModel, this.fieldInfoModel);
+  List<RouteModel> routeModels;
+  List<FieldInfoModel> fieldInfoModels;
+  int index;
+  ViewDetailsOfRouteEvent(this.routeModels, this.fieldInfoModels, this.index);
 }

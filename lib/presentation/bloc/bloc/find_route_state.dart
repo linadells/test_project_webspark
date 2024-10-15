@@ -31,12 +31,21 @@ final class ResultIsSended extends FindRouteState {
 }
 
 final class DetailedResultState extends FindRouteState {
-  RouteModel routeModel;
-  FieldInfoModel fieldInfoModel;
-  DetailedResultState(this.fieldInfoModel, this.routeModel);
+  List<RouteModel> routeModels;
+  List<FieldInfoModel> fieldInfoModels;
+  int index;
+  DetailedResultState(this.fieldInfoModels, this.routeModels, this.index);
 }
 
 final class ErrorFindRouteState extends FindRouteState {
   final DioException error;
   const ErrorFindRouteState(this.error);
+}
+
+final class ErrorInSendingResultsState extends FindRouteState {
+  final DioException error;
+  final List<RouteModel> routeModels;
+  final List<FieldInfoModel> fieldInfoModels;
+  const ErrorInSendingResultsState(
+      this.error, this.fieldInfoModels, this.routeModels);
 }

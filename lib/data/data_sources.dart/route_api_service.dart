@@ -22,7 +22,7 @@ class RouteApiService {
   }) async {
     final response = await _dio.post(
       baseUrl,
-      data: data,
+      data: [data],
       options: Options(
         headers: {
           'Content-Type': 'application/json',
@@ -30,6 +30,7 @@ class RouteApiService {
         },
       ),
     );
+    print(response);
     return response;
   }
 }

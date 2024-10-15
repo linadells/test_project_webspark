@@ -21,18 +21,32 @@ class MainScreen extends StatelessWidget {
             GoRouter.of(context).pushNamed(MyRoutes.resultListScreen);
           } else if (state is DetailedResultState) {
             GoRouter.of(context).pushNamed(MyRoutes.previewScreen);
-          } else if (state is ErrorFindRouteState) {
+          } else if (state is ErrorFindRouteState ||
+              state is ErrorInSendingResultsState) {
+            String errorMessage = '';
+            if (state is ErrorFindRouteState) {
+              errorMessage = (state as ErrorFindRouteState).error.toString();
+            } else if (state is ErrorInSendingResultsState) {
+              errorMessage =
+                  (state as ErrorInSendingResultsState).error.toString();
+            }
             showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                   title: const Text('Error'),
-                  content: Text('An error occurred: ${state.error}'),
+                  content: Text('An error occurred: ${errorMessage}'),
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        GoRouter.of(context).pop();
+                        if (state is ErrorFindRouteState) {
+                          Navigator.of(context).pop();
+                          GoRouter.of(context).pop();
+                        } else if (state is ErrorInSendingResultsState) {
+                          BlocProvider.of<FindRouteBloc>(context).add(
+                              ViewResultsEvent(
+                                  state.routeModels, state.fieldInfoModels));
+                        }
                       },
                       child: const Text('OK'),
                     ),

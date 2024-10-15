@@ -2,6 +2,7 @@ import 'package:test_project_webspark/domain/entities/route.dart';
 
 class RouteModel extends RouteEntity {
   String id;
+
   RouteModel({required super.route, required this.id});
 
   @override
@@ -10,10 +11,10 @@ class RouteModel extends RouteEntity {
   }
 
   Map<String, dynamic> toJson() {
-    List<Map<String, String>> steps = route.map((point) {
+    List<Map<String, dynamic>> steps = route.map((point) {
       return {
         'x': point.x.toString(),
-        'y': point.y.toString(),
+        'y': point.y.toString(), 
       };
     }).toList();
 
@@ -23,7 +24,7 @@ class RouteModel extends RouteEntity {
       'id': id,
       'result': {
         'steps': steps,
-        'path': path,
+        'path': path,  
       },
     };
   }

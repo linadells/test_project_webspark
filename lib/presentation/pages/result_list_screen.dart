@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_project_webspark/presentation/bloc/bloc/find_route_bloc.dart';
 
 class ResultListScreen extends StatelessWidget {
@@ -8,9 +9,11 @@ class ResultListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = BlocProvider.of<FindRouteBloc>(context).state;
-    if (state is ReadyResultState) {
+    if (state is ResultIsSended) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Process screen')),
+        appBar: AppBar(
+          title: const Text('Process screen'),
+        ),
         body: ListView.separated(
             itemCount: state.routeModels.length,
             separatorBuilder: (context, index) =>
@@ -19,8 +22,8 @@ class ResultListScreen extends StatelessWidget {
               return ListTile(
                 title: GestureDetector(
                   onTap: () => BlocProvider.of<FindRouteBloc>(context).add(
-                      ViewDetailsOfRouteEvent(state.routeModels[index],
-                          state.fieldInfoModels[index])),
+                      ViewDetailsOfRouteEvent(
+                          state.routeModels, state.fieldInfoModels, index)),
                   child: Center(
                       child: Text(
                     state.routeModels[index].toString(),
@@ -31,6 +34,7 @@ class ResultListScreen extends StatelessWidget {
             }),
       );
     }
-    return Center(child: Text('Error of definding state'));
+    return Center(
+        child: Text('Error of definding state in result list screen'));
   }
 }
