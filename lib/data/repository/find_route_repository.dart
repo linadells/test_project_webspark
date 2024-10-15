@@ -11,8 +11,9 @@ import 'package:test_project_webspark/utils/calculate_route.dart';
 
 class FindRouteRepositoryImpl implements FindRouteRepository {
   final RouteApiService _routeApiService;
+  String? url;
 
-  const FindRouteRepositoryImpl(this._routeApiService);
+  FindRouteRepositoryImpl(this._routeApiService);
 
   @override
   Future<DataState<List<FieldInfoModel>>> getFieldInfo(
@@ -25,6 +26,8 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
       final String host = parts[0];
       final String path = parts.sublist(1).join('/');
       final Uri uri = Uri.https(host, path);
+
+      url = uri.toString();
 
       res = await _routeApiService.getData(
           baseUrl: uri.toString(), queryParameters: uri.queryParameters);
@@ -53,9 +56,34 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
   }
 
   @override
-  Future<DataState<void>> sendResult(RouteEntity? route) {
-    // TODO: implement sendResult
-    throw UnimplementedError();
+  Future<DataState<void>> sendResult(RouteEntity? route) async {
+    try {
+      Response res;
+      if (route is RouteModel) {
+        if (route == null) throw Exception("Empty route");
+
+        res = await _routeApiService.sendData(
+            baseUrl: url!, data: route.toJson());
+
+        if (res.statusCode == 200 && res.data['data']['0']['correct'] == true)
+          return DataSuccess<void>(data: res);
+        else {
+          return DataFailed(
+              error: DioException(
+                  requestOptions: RequestOptions(),
+                  error: res.statusMessage,
+                  response: res,
+                  type: DioExceptionType.badResponse));
+        }
+      } else
+        throw Exception('Incorrect parameters');
+    } catch (e) {
+      return DataFailed(
+          error: DioException(
+              requestOptions: RequestOptions(),
+              error: e.toString(),
+              type: DioExceptionType.badResponse));
+    }
   }
 
   @override

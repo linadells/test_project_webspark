@@ -20,6 +20,16 @@ final class ReadyResultState extends FindRouteState {
   ReadyResultState({required this.routeModels, required this.fieldInfoModels});
 }
 
+final class SendingResults extends FindRouteState {
+  const SendingResults();
+}
+
+final class ResultIsSended extends FindRouteState {
+  List<RouteModel> routeModels;
+  List<FieldInfoModel> fieldInfoModels;
+  ResultIsSended({required this.routeModels, required this.fieldInfoModels});
+}
+
 final class DetailedResultState extends FindRouteState {
   RouteModel routeModel;
   FieldInfoModel fieldInfoModel;

@@ -13,12 +13,33 @@ class MainScreen extends StatelessWidget {
     final TextEditingController urlController = TextEditingController();
     return BlocListener<FindRouteBloc, FindRouteState>(
         listener: (context, state) {
-          if (state is CountingState) {
+          if (state is CountingState ||
+              state is ReadyResultState ||
+              state is SendingResults) {
             GoRouter.of(context).pushNamed(MyRoutes.processScreen);
-          } else if (state is ReadyResultState) {
+          } else if (state is ResultIsSended) {
             GoRouter.of(context).pushNamed(MyRoutes.resultListScreen);
           } else if (state is DetailedResultState) {
             GoRouter.of(context).pushNamed(MyRoutes.previewScreen);
+          } else if (state is ErrorFindRouteState) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Error'),
+                  content: Text('An error occurred: ${state.error}'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        GoRouter.of(context).pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
           }
         },
         child: HomeScreen());
