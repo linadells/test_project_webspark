@@ -5,6 +5,7 @@ import 'package:test_project_webspark/data/data_sources.dart/route_api_service.d
 import 'package:test_project_webspark/data/models/field_info_model.dart';
 import 'package:test_project_webspark/data/models/route_model.dart';
 import 'package:test_project_webspark/domain/entities/field_info.dart';
+import 'package:test_project_webspark/domain/entities/route.dart';
 import 'package:test_project_webspark/domain/repository/find_route_repository.dart';
 import 'package:test_project_webspark/utils/calculate_route.dart';
 
@@ -52,20 +53,27 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
   }
 
   @override
-  Future<DataState<void>> sendResult(Route? route) {
+  Future<DataState<void>> sendResult(RouteEntity? route) {
     // TODO: implement sendResult
     throw UnimplementedError();
   }
 
   @override
-  Future<List<RouteModel>> calculateRoutes({List<FieldInfoEntity>? fields}) async {
-    if (fields!=null && fields.isEmpty) throw Exception('Empty field');
-    List<RouteModel> res=[];
+  Future<List<RouteModel>> calculateRoutes(
+      {List<FieldInfoEntity>? fields}) async {
+    List<RouteModel> res = [];
+    if (fields is List<FieldInfoModel>) {
+      if (fields.isEmpty) throw Exception('Empty field');
+
       CalculateRoute calculateRoute;
-      for (FieldInfoEntity field in fields!) {
+
+      for (FieldInfoModel field in fields) {
         calculateRoute = CalculateRoute(field: field);
         calculateRoute.AStartAlgo();
+        res.add(
+            RouteModel(route: calculateRoute.AStartAlgo().route, id: field.id));
       }
-    return List.empty();
+    }
+    return res;
   }
 }

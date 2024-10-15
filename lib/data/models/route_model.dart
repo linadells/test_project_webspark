@@ -4,6 +4,11 @@ class RouteModel extends RouteEntity {
   String id;
   RouteModel({required super.route, required this.id});
 
+  @override
+  String toString() {
+    return route.map((r) => r.toString()).join('->');
+  }
+
   Map<String, dynamic> toJson() {
     List<Map<String, String>> steps = route.map((point) {
       return {

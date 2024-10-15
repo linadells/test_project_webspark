@@ -64,13 +64,14 @@ class CalculateRoute {
     while (currentCell.point != field.endPoint) {
       calculateCellCosts(currentCell);
       currentCell = findNextPointOfRoute();
-      route.add(currentCell);
+      if (currentCell.point != field.endPoint) route.add(currentCell);
     }
     return convertRoute();
   }
 
   RouteEntity convertRoute() {
     List<PointEntity> list = route.map((el) => el.point).toList();
+    list.add(field.endPoint);
     return RouteEntity(route: list);
   }
 }
