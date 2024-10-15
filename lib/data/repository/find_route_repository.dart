@@ -3,8 +3,10 @@ import 'package:flutter/src/widgets/navigator.dart';
 import 'package:test_project_webspark/core/data_state.dart';
 import 'package:test_project_webspark/data/data_sources.dart/route_api_service.dart';
 import 'package:test_project_webspark/data/models/field_info_model.dart';
+import 'package:test_project_webspark/data/models/route_model.dart';
 import 'package:test_project_webspark/domain/entities/field_info.dart';
 import 'package:test_project_webspark/domain/repository/find_route_repository.dart';
+import 'package:test_project_webspark/utils/calculate_route.dart';
 
 class FindRouteRepositoryImpl implements FindRouteRepository {
   final RouteApiService _routeApiService;
@@ -56,10 +58,14 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
   }
 
   @override
-  Future<List<Route>> calculateRoutes({List<FieldInfoEntity>? fields}) {
-    if(fields==null || fields.isEmpty) throw Exception('Empty field');
-    for(FieldInfoEntity field in fields){
-      
-    }
+  Future<List<RouteModel>> calculateRoutes({List<FieldInfoEntity>? fields}) async {
+    if (fields!=null && fields.isEmpty) throw Exception('Empty field');
+    List<RouteModel> res=[];
+      CalculateRoute calculateRoute;
+      for (FieldInfoEntity field in fields!) {
+        calculateRoute = CalculateRoute(field: field);
+        calculateRoute.AStartAlgo();
+      }
+    return List.empty();
   }
 }

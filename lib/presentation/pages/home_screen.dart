@@ -5,7 +5,7 @@ import 'package:test_project_webspark/config/routes/routes_constants.dart';
 import 'package:test_project_webspark/presentation/bloc/bloc/find_route_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen();
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,9 @@ class HomeScreen extends StatelessWidget {
 
   Scaffold _buildHomeScreen(BuildContext context, TextEditingController  urlController) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home screen')),
+      appBar: AppBar(title: const Text('Home screen')),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                     const Icon(Icons.sync_alt),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(left: 30),
+                        margin: const EdgeInsets.only(left: 30),
                         child: TextField(
                           controller: urlController,
                           decoration: const InputDecoration(
@@ -55,14 +55,14 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
                   BlocProvider.of<FindRouteBloc>(context)
                       .add(StartCountingProcessEvent(urlController.text));
                 },
-                child: Text('Start counting process'),
+                child: const Text('Start counting process'),
               ),
             ),
           ],
