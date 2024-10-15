@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/navigator.dart';
 import 'package:test_project_webspark/core/data_state.dart';
 import 'package:test_project_webspark/data/data_sources.dart/route_api_service.dart';
 import 'package:test_project_webspark/data/models/field_info_model.dart';
+import 'package:test_project_webspark/domain/entities/field_info.dart';
 import 'package:test_project_webspark/domain/repository/find_route_repository.dart';
 
 class FindRouteRepositoryImpl implements FindRouteRepository {
@@ -52,5 +53,13 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
   Future<DataState<void>> sendResult(Route? route) {
     // TODO: implement sendResult
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Route>> calculateRoutes({List<FieldInfoEntity>? fields}) {
+    if(fields==null || fields.isEmpty) throw Exception('Empty field');
+    for(FieldInfoEntity field in fields){
+      
+    }
   }
 }
