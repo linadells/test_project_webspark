@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_project_webspark/core/styles.dart';
+import 'package:go_router/go_router.dart';
+import 'package:test_project_webspark/config/routes/routes_constants.dart';
 import 'package:test_project_webspark/presentation/bloc/bloc/find_route_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController urlController=TextEditingController();
+      final TextEditingController urlController = TextEditingController();
+    return BlocConsumer<FindRouteBloc, FindRouteState>(
+      listener: (context, state) {
+        if (state is CountingState) {
+          GoRouter.of(context).pushNamed(MyRoutes.processScreen);
+        }
+      },
+      builder: (context, state) {
+        return _buildHomeScreen(context, urlController);
+      },
+    );
+  }
+
+  Scaffold _buildHomeScreen(BuildContext context, TextEditingController  urlController) {
     return Scaffold(
       appBar: AppBar(title: Text('Home screen')),
       body: Container(
@@ -41,9 +55,12 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Container(width: double.infinity,
+            Container(
+              width: double.infinity,
               child: TextButton(
                 onPressed: () {
+                  BlocProvider.of<FindRouteBloc>(context)
+                      .add(StartCountingProcessEvent(urlController.text));
                 },
                 child: Text('Start counting process'),
               ),

@@ -14,15 +14,19 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
   Future<DataState<List<FieldInfoModel>>> getFieldInfo(
       {String? baseUrl}) async {
     Response res;
-    if(baseUrl==null) throw Exception("Empty url");
+    if (baseUrl == null) throw Exception("Empty url");
     try {
-      Map<String, dynamic> queryParams = Uri.parse(baseUrl).queryParameters;
+      final List<String> parts = baseUrl.split('/');
+
+      final String host = parts[0];
+      final String path = parts.sublist(1).join('/');
+      final Uri uri = Uri.https(host, path);
 
       res = await _routeApiService.getData(
-          baseUrl: baseUrl, queryParameters: queryParams);
+          baseUrl: uri.toString(), queryParameters: uri.queryParameters);
 
       if (res.statusCode == 200) {
-        List<FieldInfoModel> fieldInfoList = (res.data as List)
+        List<FieldInfoModel> fieldInfoList = (res.data['data'] as List)
             .map(
                 (item) => FieldInfoModel.fromJson(item as Map<String, dynamic>))
             .toList();

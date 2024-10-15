@@ -15,6 +15,11 @@ class RouteApiService {
     final response = await _dio.get(
         baseUrl,
         queryParameters: queryParameters,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+          }
+        )
       );
       return response;
   }

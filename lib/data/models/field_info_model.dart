@@ -7,19 +7,18 @@ class FieldInfoModel extends FieldInfoEntity {
       {required super.fiendLenght,
       required super.field,
       required super.startPoint,
-      required super.endPoint, required this.id});
+      required super.endPoint,
+      required this.id});
 
-    factory FieldInfoModel.fromJson(Map<String, dynamic> json) {
-     List<List<bool>> field = (json['field'] as List<String>)
-      .map((row) => row
-          .split('') 
-          .map((char) => char == '.' ? true : false)
-          .toList()) 
-      .toList();
+  factory FieldInfoModel.fromJson(Map<String, dynamic> json) {
+    List<List<bool>> field = (List<String>.from(json['field']))
+        .map((row) =>
+            row.split('').map((char) => char == '.' ? true : false).toList())
+        .toList();
 
     return FieldInfoModel(
       id: json['id'],
-      fiendLenght: field.length, 
+      fiendLenght: field.length,
       field: field,
       startPoint: PointEntity(x: json['start']['x'], y: json['start']['y']),
       endPoint: PointEntity(x: json['end']['x'], y: json['end']['y']),
