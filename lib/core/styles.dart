@@ -16,6 +16,9 @@ class AppThemes {
       displayMedium: TextStyle(
         fontSize: 18,
       ),
+      displayLarge: TextStyle(
+        fontSize: 25,
+      ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(

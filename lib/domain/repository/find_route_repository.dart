@@ -4,6 +4,7 @@ import 'package:test_project_webspark/domain/entities/route.dart';
 
 abstract class FindRouteRepository {
   Future<DataState<List<FieldInfoEntity>>> getFieldInfo({String baseUrl});
-  Future<List<RouteEntity>> calculateRoutes({List<FieldInfoEntity> fields});
+  Future<List<RouteEntity>> calculateRoutes(
+      {List<FieldInfoEntity>? fields, required Function(double) onProgress});
   Future<DataState<void>> sendResult(RouteEntity? route);
 }

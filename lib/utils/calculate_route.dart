@@ -59,12 +59,21 @@ class CalculateRoute {
     return minCell;
   }
 
-  RouteEntity AStartAlgo() {
+  RouteEntity AStartAlgo(Function onProgress, {double initialProgress = 0.0}) {
     Cell currentCell = route.first;
+
+    int steps = 0;
+    int totalSteps = (field.fiendLenght * field.fiendLenght);
+    onProgress(initialProgress);
+
     while (currentCell.point != field.endPoint) {
       calculateCellCosts(currentCell);
       currentCell = findNextPointOfRoute();
       if (currentCell.point != field.endPoint) route.add(currentCell);
+      steps++;
+      double currentProgress =
+          initialProgress + (steps / totalSteps * (1 - initialProgress));
+      onProgress(currentProgress);
     }
     return convertRoute();
   }

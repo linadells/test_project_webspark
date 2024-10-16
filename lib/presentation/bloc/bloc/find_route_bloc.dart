@@ -35,14 +35,23 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
   Future<void> onStartCountingProcessEvent(
       StartCountingProcessEvent event, Emitter<FindRouteState> emit) async {
     event.apiUrl = "flutter.webspark.dev/flutter/api";
-    emit(CountingState(event.apiUrl));
+    Function onProgress = (progress) {
+        emit(CountingState(progress));
+      };
+
+    onProgress(0.0);
+
     apiUrl = event.apiUrl;
     var res = await _getFieldInfoUseCase(params: event.apiUrl);
+    onProgress(0.2);
+
     if (res is DataFailed) {
       emit(ErrorFindRouteState(res.error!));
     } else {
       List<RouteModel> routes =
-          await _calculateRoutesUsecase(params: res.data) as List<RouteModel>;
+          await _calculateRoutesUsecase(params: [res.data, onProgress])
+              as List<RouteModel>;
+
       emit(ReadyResultState(
           routeModels: routes,
           fieldInfoModels: res.data as List<FieldInfoModel>));
@@ -57,14 +66,11 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
       var temp = await _sendResultUseCase.call(params: route as RouteEntity);
       results.add(temp);
     }
-    if (results.any((result) => result is DataFailed))
+    if (results.any((result) => result is DataFailed)) {
+      DataFailed err = results.where((res) => res is DataFailed).first;
       emit(ErrorInSendingResultsState(
-          DioException(
-              requestOptions: RequestOptions(),
-              error: results.where((res) => res is DataFailed)),
-          event.fieldInfoModels,
-          event.routes));
-    else {
+          err.error!, event.fieldInfoModels, event.routes));
+    } else {
       emit(ResultIsSended(
           routeModels: event.routes, fieldInfoModels: event.fieldInfoModels));
     }

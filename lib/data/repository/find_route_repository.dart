@@ -64,7 +64,7 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
 
         res = await _routeApiService.sendData(
             baseUrl: url!, data: route.toJson());
-            print(res);
+        print(res);
         if (res.statusCode == 200)
           return DataSuccess<void>(data: res);
         else {
@@ -88,18 +88,23 @@ class FindRouteRepositoryImpl implements FindRouteRepository {
 
   @override
   Future<List<RouteModel>> calculateRoutes(
-      {List<FieldInfoEntity>? fields}) async {
+      {List<FieldInfoEntity>? fields,
+      required Function(double) onProgress}) async {
     List<RouteModel> res = [];
     if (fields is List<FieldInfoModel>) {
       if (fields.isEmpty) throw Exception('Empty field');
 
       CalculateRoute calculateRoute;
 
+      double progress = 0.2;
+
       for (FieldInfoModel field in fields) {
         calculateRoute = CalculateRoute(field: field);
-        calculateRoute.AStartAlgo();
-        res.add(
-            RouteModel(route: calculateRoute.AStartAlgo().route, id: field.id));
+        res.add(RouteModel(
+            route:
+                calculateRoute.AStartAlgo(onProgress, initialProgress: progress)
+                    .route,
+            id: field.id));
       }
     }
     return res;

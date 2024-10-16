@@ -1,17 +1,15 @@
 part of 'find_route_bloc.dart';
 
 @immutable
-sealed class FindRouteState extends Equatable {
-  final String? apiUrl;
-  const FindRouteState({this.apiUrl});
-  @override
-  List<Object?> get props => [apiUrl];
+sealed class FindRouteState {
+  const FindRouteState();
 }
 
 final class FindRouteInitialState extends FindRouteState {}
 
 final class CountingState extends FindRouteState {
-  const CountingState(String apiUrl) : super(apiUrl: apiUrl);
+  double progress;
+  CountingState(this.progress);
 }
 
 final class ReadyResultState extends FindRouteState {
