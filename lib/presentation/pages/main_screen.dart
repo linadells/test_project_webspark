@@ -13,6 +13,7 @@ class MainScreen extends StatelessWidget {
     final TextEditingController urlController = TextEditingController();
     return BlocListener<FindRouteBloc, FindRouteState>(
         listener: (context, state) {
+          print(state);
           if (state is CountingState ||
               state is ReadyResultState ||
               state is SendingResults) {
@@ -30,30 +31,33 @@ class MainScreen extends StatelessWidget {
               errorMessage =
                   (state as ErrorInSendingResultsState).error.toString();
             }
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Error'),
-                  content: Text('An error occurred: ${errorMessage}'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        if (state is ErrorFindRouteState) {
-                          Navigator.of(context).pop();
-                          GoRouter.of(context).pop();
-                        } else if (state is ErrorInSendingResultsState) {
-                          BlocProvider.of<FindRouteBloc>(context).add(
-                              ViewResultsEvent(
-                                  state.routeModels, state.fieldInfoModels));
-                        }
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Error'),
+                    content: Text('An error occurred: ${errorMessage}'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          if (state is ErrorFindRouteState) {
+                            Navigator.of(context).pop();
+                            BlocProvider.of<FindRouteBloc>(context).apiUrl=null;
+                            GoRouter.of(context).pushNamed(MyRoutes.mainScreen);
+                          } else if (state is ErrorInSendingResultsState) {
+                            BlocProvider.of<FindRouteBloc>(context).add(
+                                ViewResultsEvent(
+                                    state.routeModels, state.fieldInfoModels));
+                          }
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           }
         },
         child: HomeScreen());

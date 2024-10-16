@@ -19,7 +19,7 @@ part 'find_route_event.dart';
 part 'find_route_state.dart';
 
 class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
-  late final String apiUrl;
+  String? apiUrl;
   final GetFieldInfoUseCase _getFieldInfoUseCase;
   final CalculateRoutesUsecase _calculateRoutesUsecase;
   final SendResultUseCase _sendResultUseCase;
@@ -34,7 +34,7 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
 
   Future<void> onStartCountingProcessEvent(
       StartCountingProcessEvent event, Emitter<FindRouteState> emit) async {
-    event.apiUrl = "flutter.webspark.dev/flutter/api";
+    //event.apiUrl = "flutter.webspark.dev/flutter/api";
     Function onProgress = (progress) {
         emit(CountingState(progress));
       };
