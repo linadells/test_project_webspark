@@ -13,7 +13,6 @@ class MainScreen extends StatelessWidget {
     final TextEditingController urlController = TextEditingController();
     return BlocListener<FindRouteBloc, FindRouteState>(
         listener: (context, state) {
-          print(state);
           if (state is CountingState ||
               state is ReadyResultState ||
               state is SendingResults) {

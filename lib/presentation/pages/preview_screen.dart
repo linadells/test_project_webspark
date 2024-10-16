@@ -26,7 +26,7 @@ class PreviewScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Expanded(
+            Flexible(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount:
@@ -72,8 +72,11 @@ class PreviewScreen extends StatelessWidget {
                 },
               ),
             ),
-            Center(
-              child: Text(state.routeModels[state.index].toString()),
+            Expanded(
+              child: Text(
+                state.routeModels[state.index].toString(),
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
             )
           ],
         ),
