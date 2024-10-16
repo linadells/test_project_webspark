@@ -34,7 +34,6 @@ class FindRouteBloc extends Bloc<FindRouteEvent, FindRouteState> {
 
   Future<void> onStartCountingProcessEvent(
       StartCountingProcessEvent event, Emitter<FindRouteState> emit) async {
-    event.apiUrl = "flutter.webspark.dev/flutter/api";
     Function onProgress = (progress) {
         emit(CountingState(progress));
       };
